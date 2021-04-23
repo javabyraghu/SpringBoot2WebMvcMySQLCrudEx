@@ -1,7 +1,6 @@
 package in.nareshit.raghu.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,22 +11,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import in.nareshit.raghu.exception.ProductNotFoundException;
 import in.nareshit.raghu.model.Product;
 import in.nareshit.raghu.service.IProductService;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-	
+
 	@Autowired
 	private IProductService service; //HAS-A
-	
+
 	//1. show Register page
 	@GetMapping("/register")
 	public String showReg() {
 		return "ProductRegister";	
 	}
-	
+
 	//2. save on click submit
 	@PostMapping("/save")
 	public String saveProduct(
@@ -40,7 +40,7 @@ public class ProductController {
 		model.addAttribute("message", msg);
 		return "ProductRegister";
 	}
-	
+
 	//3. display all products
 	/***
 	 * Make call to service Layer to fetch data
@@ -53,8 +53,8 @@ public class ProductController {
 		model.addAttribute("list", list);
 		return "ProductData";
 	}
-	
-	
+
+
 	//4. delete product by id
 	/**
 	 * On Click HyperLink request looks
@@ -70,19 +70,23 @@ public class ProductController {
 			Model model
 			)
 	{
-		service.deleteProduct(id);
-		//create success msg
-		String msg = "Product '"+id+"' deleted!";
-		model.addAttribute("message", msg);
-		
+		try {
+			service.deleteProduct(id);
+			String msg = "Product '"+id+"' deleted!";
+			//create success msg
+			model.addAttribute("message", msg);
+		} catch (ProductNotFoundException e) {
+			model.addAttribute("message", e.getMessage());
+		}
+
 		//load new data
 		List<Product> list = service.getAllProducts();
 		model.addAttribute("list", list);
-		
+
 		return "ProductData";
 	}
-	
-	
+
+
 	//5. show Edit Page with data
 	/**
 	 * Read Request Param, make service call
@@ -96,21 +100,20 @@ public class ProductController {
 			)
 	{
 		String path = null;
-		Optional<Product> opt = service.getOneProduct(id);
-		if(opt.isEmpty()) { //not exist
-			//redirect : response.sendRedirect(URL)
-			path = "redirect:all";
-		} else { //exist
-			Product p = opt.get();
-			//send to UI
+		try {
+			Product p = service.getOneProduct(id);
 			model.addAttribute("product", p);
 			path = "ProductEdit";
+		} catch (ProductNotFoundException e) {
+			List<Product> list = service.getAllProducts();
+			model.addAttribute("message", e.getMessage());
+			model.addAttribute("list", list);
+			path = "ProductData";
 		}
-		
 		return path;
 	}
-	
-	
+
+
 	//6. on click update modify in db
 	/**
 	 * Read Form data, call update service
@@ -124,5 +127,5 @@ public class ProductController {
 		service.updateProduct(product);
 		return "redirect:all";
 	}
-	
+
 }

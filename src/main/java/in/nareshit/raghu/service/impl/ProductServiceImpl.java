@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import in.nareshit.raghu.exception.ProductNotFoundException;
 import in.nareshit.raghu.model.Product;
 import in.nareshit.raghu.repo.ProductRepository;
 import in.nareshit.raghu.service.IProductService;
@@ -38,12 +39,18 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	public void deleteProduct(Integer id) {
-		repo.deleteById(id);
+		//repo.deleteById(id);
+		repo.delete(getOneProduct(id));
 	}
 
-	public Optional<Product> getOneProduct(Integer id) {
+	public Product getOneProduct(Integer id) {
 		Optional<Product> opt = repo.findById(id);
-		return opt;
+		if(opt.isPresent()) {
+			return opt.get();
+		} else {
+			throw new ProductNotFoundException(
+					"No Product Exist with id "+id);
+		}
 	}
 
 	public List<Product> getAllProducts() {
