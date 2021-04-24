@@ -21,7 +21,7 @@ public class ProductServiceImpl implements IProductService {
 		//calculation
 		//JDK 10 # local variable type inference
 		// Datatype is selected by java compiler
-		var cost = p.getProdCost();
+		double cost = p.getProdCost();
 		p.setProdDisc(cost*0.8);
 		p.setProdGst(cost*0.12);
 		
@@ -31,7 +31,7 @@ public class ProductServiceImpl implements IProductService {
 
 	public void updateProduct(Product p) {
 		//is exist then update
-		var cost = p.getProdCost();
+		double cost = p.getProdCost();
 		p.setProdDisc(cost*0.8);
 		p.setProdGst(cost*0.12);
 		
