@@ -3,6 +3,9 @@ package in.nareshit.raghu.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,12 +50,23 @@ public class ProductController {
 	 * Read data as List<T>
 	 * Send data to UI using Model memory
 	 */
+	//.../all?page=__&size=__
 	@GetMapping("/all")
+	public String showAll(
+			@PageableDefault(page = 0,size=3)Pageable pageable,
+			Model model) 
+	{
+		Page<Product> page = service.getAllProducts(pageable);
+		model.addAttribute("list", page.getContent());
+		model.addAttribute("page", page);
+		return "ProductData";
+	}
+	/*@GetMapping("/all")
 	public String showAll(Model model) {
 		List<Product> list = service.getAllProducts();
 		model.addAttribute("list", list);
 		return "ProductData";
-	}
+	}*/
 
 
 	//4. delete product by id

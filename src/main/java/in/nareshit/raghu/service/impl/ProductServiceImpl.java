@@ -3,6 +3,8 @@ package in.nareshit.raghu.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import in.nareshit.raghu.exception.ProductNotFoundException;
@@ -59,6 +61,10 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> getAllProducts() {
 		List<Product> list = repo.findAll();
 		return list;
+	}
+	
+	public Page<Product> getAllProducts(Pageable pageable) {
+		return repo.findAll(pageable);
 	}
 
 }
