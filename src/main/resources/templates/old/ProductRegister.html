@@ -1,0 +1,22 @@
+<html xmlns:th="https://www.thymeleaf.org/">
+<body>
+<h3>Product Register Page</h3>
+<form th:action="@{/product/save}" method="POST">
+<pre>
+CODE   : <input type="text" name="prodCode"/>
+COST   : <input type="text" name="prodCost"/>
+VENDOR : <select name="prodVen">
+			<option value="">-SELECT-</option>
+			<option value="NIT">NIT</option>
+			<option value="TEST">TEST</option>
+			<option value="ORCL">ORCL</option>
+		  </select>
+NOTE  : <textarea name="prodNote"></textarea>
+	 <input type="submit" value="Create"/>		  
+</pre>
+</form>
+<span th:text="${message}"></span>
+<hr/>
+<a th:href="@{/product/all}">View All</a>
+</body>
+</html>

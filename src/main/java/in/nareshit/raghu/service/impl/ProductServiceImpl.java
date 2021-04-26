@@ -1,7 +1,6 @@
 package in.nareshit.raghu.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,13 +43,17 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	public Product getOneProduct(Integer id) {
-		Optional<Product> opt = repo.findById(id);
+		/*Optional<Product> opt = repo.findById(id);
 		if(opt.isPresent()) {
 			return opt.get();
 		} else {
 			throw new ProductNotFoundException(
 					"No Product Exist with id "+id);
-		}
+		}*/
+		return repo.findById(id).orElseThrow(
+				()->new ProductNotFoundException(
+				"No Product Exist with id "+id));
+		
 	}
 
 	public List<Product> getAllProducts() {

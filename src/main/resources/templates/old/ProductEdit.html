@@ -1,0 +1,22 @@
+<html xmlns:th="https://www.thymeleaf.org/">
+<body>
+<h3>Product Edit Page</h3>
+<form th:action="@{/product/update}" method="POST" th:object="${product}">
+<pre>
+ID     :  <input type="text" th:field="*{prodId}" readonly/>
+CODE   : <input type="text" th:field="*{prodCode}" readonly/>
+COST   : <input type="text" th:field="*{prodCost}"/>
+VENDOR : <select th:field="*{prodVen}">
+			<option value="">-SELECT-</option>
+			<option value="NIT">NIT</option>
+			<option value="TEST">TEST</option>
+			<option value="ORCL">ORCL</option>
+		  </select>
+NOTE  : <textarea th:field="*{prodNote}"></textarea>
+	 <input type="submit" value="Update"/>		  
+</pre>
+</form>
+<hr/>
+<a th:href="@{/product/all}">View All</a>
+</body>
+</html>
